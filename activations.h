@@ -22,7 +22,7 @@ float didentity(Neuron *unit);
 float lk_relu(Neuron *unit);
 float dlk_relu(Neuron *unit);
 
-const neural_function_t activation_functions[5] = {sigmoid, relu, tanh_nn, identity, lk_relu};//must respect order of macros defined above
-const neural_function_t derivatives[5] = {dsigmoid, drelu, dtanh_nn, didentity,dlk_relu};
+const neural_function_t activation_functions[5] = {sigmoid, relu, tanh_nn, identity, lk_relu}; //must respect order of macros defined above
+const neural_function_t derivatives[5] = {dsigmoid, drelu, dtanh_nn, didentity, dlk_relu};
 
 #endif

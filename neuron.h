@@ -8,5 +8,4 @@ typedef struct neuron_t
     float delta;
 } Neuron;
 
-
 #endif

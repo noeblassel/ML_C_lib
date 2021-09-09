@@ -1,8 +1,8 @@
 #include "rng.h"
 
-
-void rseed(long seed){
-    r_state=seed;
+void rseed(long seed)
+{
+    r_state = seed;
 }
 long lcg()
 {
