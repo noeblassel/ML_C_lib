@@ -42,7 +42,7 @@ void backward(MultiLayerPerceptron *net, float *input, float *output, bool recom
 {
     if (recompute_activations)
         forward(net, input);
-    for (int k = 0; k < net->layer_dims[net->n_layers - 1]; ++k)
+    for (int k = 0; k < net->layer_dims[net->n_layers - 1]; ++k)//TODO: allow for generic implementation of loss and gradients in the last layer. FOR NOW: squared-error loss is used
     {
         net->layers[net->n_layers - 1].units[k].delta = (*(net->layers[net->n_layers - 1].dactivation))(&(net->layers[net->n_layers - 1].units[k])) * (net->layers[net->n_layers - 1].units[k].activation_value - output[k]);
     }
