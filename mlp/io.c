@@ -142,5 +142,22 @@ void save_to_bin_file(MultiLayerPerceptron *net, char *filename){
 }
 
 void load_from_bin_file(MultiLayerPerceptron *net, char *filename){
-//NOT IMPLEMENTED
+    int n_layers;
+    FILE *fp=fopen(filename,"rb");
+    fread(&n_layers,sizeof(int),1,fp);
+    int *layer_dims=(int*)malloc(n_layers*sizeof(int));
+    fread(layer_dims,sizeof(int),n_layers,fp);
+    size_t n_bytes=sizeof(int)*(1+n_layers+n_layers);
+    for(int i=1;i<n_layers;++i){
+        n_bytes+=layer_dims[i]*(1+layer_dims[i-1])*sizeof(float);
+    }
+    fseek(fp,0,SEEK_SET);
+    free(layer_dims);
+    byte *bin_data=(byte*)malloc(n_bytes);
+    fread(bin_data,1,n_bytes,fp);
+    size_t end_pos;
+    read_from_bytes(net,bin_data,&end_pos);
+    assert(end_pos==n_bytes);
+    free(bin_data);
+    fclode(fp);
 }
