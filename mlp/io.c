@@ -3,14 +3,15 @@
 char *write_to_z85(MultiLayerPerceptron *net)
 {
     size_t n_bytes;
-    byte* data=write_to_bytes(net,&n_bytes);
+    byte *data = write_to_bytes(net, &n_bytes);
     char *encoded_data = z85_encode(data, n_bytes);
     free(data);
 
     return encoded_data;
 }
 
-byte* write_to_bytes(MultiLayerPerceptron *net,size_t *buffer_length){
+byte *write_to_bytes(MultiLayerPerceptron *net, size_t *buffer_length)
+{
     size_t n_bytes = 0;
     n_bytes += sizeof net->n_layers;
     for (int i = 0; i < net->n_layers; ++i)
@@ -59,7 +60,7 @@ byte* write_to_bytes(MultiLayerPerceptron *net,size_t *buffer_length){
         }
     }
     assert(copy_ptr == data + n_bytes);
-    *buffer_length=n_bytes;
+    *buffer_length = n_bytes;
     return data;
 }
 
@@ -67,12 +68,13 @@ void read_from_z85(MultiLayerPerceptron *net, char *z85_string)
 {
     size_t n_bytes;
     byte *decoded_data = z85_decode(z85_string);
-    read_from_bytes(net,decoded_data,&n_bytes);
+    read_from_bytes(net, decoded_data, &n_bytes);
     assert(n_bytes == strlen(z85_string) * 4 / 5);
     free(decoded_data);
 }
 
-void read_from_bytes(MultiLayerPerceptron *net,byte *byte_array,size_t *end_position){
+void read_from_bytes(MultiLayerPerceptron *net, byte *byte_array, size_t *end_position)
+{
     byte *read_ptr = byte_array;
     int num_layers;
     memcpy(&num_layers, read_ptr, sizeof(int));
@@ -104,7 +106,7 @@ void read_from_bytes(MultiLayerPerceptron *net,byte *byte_array,size_t *end_posi
             read_ptr += sizeof(float);
         }
     }
-    *end_position=(size_t)(read_ptr-byte_array);
+    *end_position = (size_t)(read_ptr - byte_array);
     free(layer_dimensions);
     free(activation_types);
 }
@@ -132,32 +134,35 @@ void load_from_z85_file(MultiLayerPerceptron *net, char *filename)
     fclose(fp);
 }
 
-void save_to_bin_file(MultiLayerPerceptron *net, char *filename){
+void save_to_bin_file(MultiLayerPerceptron *net, char *filename)
+{
     size_t n_bytes;
-    byte *net_description=write_to_bytes(net,&n_bytes);
-    FILE *fp=fopen(filename,"wb");
-    fwrite(net_description,1,n_bytes,fp);
+    byte *net_description = write_to_bytes(net, &n_bytes);
+    FILE *fp = fopen(filename, "wb");
+    fwrite(net_description, 1, n_bytes, fp);
     fclose(fp);
     free(net_description);
 }
 
-void load_from_bin_file(MultiLayerPerceptron *net, char *filename){
+void load_from_bin_file(MultiLayerPerceptron *net, char *filename)
+{
     int n_layers;
-    FILE *fp=fopen(filename,"rb");
-    fread(&n_layers,sizeof(int),1,fp);
-    int *layer_dims=(int*)malloc(n_layers*sizeof(int));
-    fread(layer_dims,sizeof(int),n_layers,fp);
-    size_t n_bytes=sizeof(int)*(1+n_layers+n_layers);
-    for(int i=1;i<n_layers;++i){
-        n_bytes+=layer_dims[i]*(1+layer_dims[i-1])*sizeof(float);
+    FILE *fp = fopen(filename, "rb");
+    fread(&n_layers, sizeof(int), 1, fp);
+    int *layer_dims = (int *)malloc(n_layers * sizeof(int));
+    fread(layer_dims, sizeof(int), n_layers, fp);
+    size_t n_bytes = sizeof(int) * (1 + n_layers + n_layers);
+    for (int i = 1; i < n_layers; ++i)
+    {
+        n_bytes += layer_dims[i] * (1 + layer_dims[i - 1]) * sizeof(float);
     }
-    fseek(fp,0,SEEK_SET);
+    fseek(fp, 0, SEEK_SET);
     free(layer_dims);
-    byte *bin_data=(byte*)malloc(n_bytes);
-    fread(bin_data,1,n_bytes,fp);
+    byte *bin_data = (byte *)malloc(n_bytes);
+    fread(bin_data, 1, n_bytes, fp);
     size_t end_pos;
-    read_from_bytes(net,bin_data,&end_pos);
-    assert(end_pos==n_bytes);
+    read_from_bytes(net, bin_data, &end_pos);
+    assert(end_pos == n_bytes);
     free(bin_data);
     fclode(fp);
 }
