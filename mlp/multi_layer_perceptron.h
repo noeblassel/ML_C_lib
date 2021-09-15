@@ -7,13 +7,13 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "neuron.h"
-#include "layer.h"
-#include "rng.h"
-#include "activations.h"
+#include "../neuron.h"
+#include "../layer.h"
+#include "../rng.h"
+#include "../activations.h"
 
-#include "mlp/utils.h"
-#include "mlp/io.h"
+#include "utils.h"
+#include "io.h"
 
 typedef struct mlp_t
 {

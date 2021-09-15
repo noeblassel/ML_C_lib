@@ -1,7 +1,7 @@
 #ifndef __MLP_UTILS_H__
 #define __MLP_UTILS_H__
 
-#include "../multi_layer_perceptron.h"
+#include "multi_layer_perceptron.h"
 
 void setup(MultiLayerPerceptron *net, int n_layers, int *layer_dimensions, int *activation_types);
 

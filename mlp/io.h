@@ -4,7 +4,7 @@
 THIS HEADER FILE
 */
 
-#include "../multi_layer_perceptron.h"
+#include "multi_layer_perceptron.h"
 #include "../base85.h"
 #include <stdio.h>
 #include <stdlib.h>
