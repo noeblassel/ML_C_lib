@@ -1,0 +1,55 @@
+/*TODO:
+-refactor nn code into a sequential model class:
+    a sequential model is a linked list of layer objects
+-implement generic layer class:
+    each layer has:
+        -a forward function pointer, with signature void forward(Layer* self,Layer* prev), which reads activation values from previous Layer and transforms it according to its type
+        -a backward function pointer, whith signature void backward(Layer* self,Layer* next), which reads loss derivatives from next Layer and backprops it according to the chain rule
+        -a specific input/output interface to write/read/init its type, size, and parameters if present.
+        -an array of floats units, and a record of its size
+        -a sizewise congruent array of floats to represent the gradient of objective function w.r.t. the unit values in the layer
+    in addition if the layer is parametrized, it should have
+        -an array of floats representing the parameters
+        -a sizewise congruent array of floats to represent the gradient of objective function w.r.t. the parameters
+        -it is the job of each subclass to provide detailed ways to implement in a consistent way:
+            -input/output to populate/serialize the layer
+            -the forward method
+            -the backward method*
+            
+    e.g. */
+    typedef int layer_type;
+    typedef unsigned char byte;
+    typedef void (*propagation_func_ptr)(Layer*,Layer*);
+
+    typedef byte* (*writer_func_ptr)(Layer*,int*);//Must be freed by caller;
+    typedef void (*reader_func_ptr)(Layer*,byte*);
+    typedef void (*initializer_func_ptr)(Layer*);
+
+    struct Layer;
+    typedef struct Layer{
+
+        layer_type type;
+
+        Layer* previous;
+        Layer* next;
+
+        propagation_func_ptr forward;
+        propagation_func_ptr backward;
+
+        int n_units;
+        float* units;
+        float* grad_units;
+
+        int n_parameters;
+        float* parameters;
+        float* grad_parameters;
+
+        writer_func_ptr write;
+        reader_func_ptr read;
+
+        initializer_func_ptr create;
+
+    }Layer;
+
+    
+    

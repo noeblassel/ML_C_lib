@@ -166,3 +166,5 @@ void load_from_bin_file(MultiLayerPerceptron *net, char *filename)
     free(bin_data);
     fclode(fp);
 }
+
+
